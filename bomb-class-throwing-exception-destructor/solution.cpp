@@ -36,7 +36,6 @@ public:
     //
     void close() {
         throw "boom";
-        delete this;
     }
     
     //
@@ -57,6 +56,7 @@ public:
         if(!closed) {
             try {
                 bomb->close();
+                delete bomb;
             }
             catch (...) {
                 cout <<"caught exception from destructor\n";
