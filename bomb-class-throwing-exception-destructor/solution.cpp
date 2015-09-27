@@ -86,14 +86,14 @@ void f() {
 //*/    
     // program dies here: can't throw two exceptions
     // at the same time, so terminates
-    //throw "no boom"; // program dies here
+    throw "no boom"; // program dies here
 }
 
 int main()
 {
     try {
         f();
-    } catch (char *message) {
+    } catch (const char *message) {
       cout << "f threw " << message << endl; // never gets here
     }
 }
