@@ -1,91 +1,87 @@
-#include <map>
-#include <set>
-#include <list>
-#include <cmath>
-#include <ctime>
-#include <deque>
-#include <queue>
-#include <stack>
-#include <bitset>
-#include <cstdio>
-#include <limits>
-#include <vector>
-#include <cstdlib>
-#include <numeric>
-#include <sstream>
+// This is the text editor interface. 
+// Anything you type or change here will be seen by the other person in real time.
+
 #include <iostream>
-#include <algorithm>
+#include <sstream>
+
 using namespace std;
- 
-//1234
-//1,234
- 
-// 104450 -> 104,450
-// 123123123 -> 123,123,123
- 
-// 1000000 -> 10,00,000
-// 00010100
 
-const int en_style[4] = { 3, 7, 11, 15 };
-const int in_style[5] = { 3, 6, 9, 12, 15 };
+template<typename T>
+struct StyleBase {
+    static int computeCommaCount( int size ) {
+        return T::computeCommaCount( size );
+    }
+    static bool isComma( int position ) {
+        return T::isComma( position );
+    }
+};
 
-string formatNum(int num) {
+struct StyleEN : StyleBase<StyleEN> {
+    static int computeCommaCount( int size ) {
+        return (size-1) / 3;
+    }
+    static bool isComma( int position ) {
+        return position % 4 == 3;
+    }
+};
+
+struct StyleIN : StyleBase<StyleIN> {
+    static int computeCommaCount( int size ) {
+        return (size-2) / 2;
+    }
+    static bool isComma( int position ) {
+        return position>0 && position%3==0;
+    }
+};
+
+template<typename T>
+string formatNum( int number, StyleBase<T>& style ) {
     
     bool flag_negative(false);
-    if( num<0 ) {
-        num*=-1;
+    if( number<0 ) {
         flag_negative = true;
+        number *= -1;
     }
     
     stringstream ss;
-    ss << num;
-    string num_str = ss.str();
-    //cout << num_str << endl;
-
-    // en_style
-    //int count = (num_str.size()-1) / 3;
-    // in_style
-    int count = (num_str.size()-2) / 2;
-    //cout << count << endl;
+    ss<<number;
+    string result( ss.str() );
     
-    if( count>0 ) {
-        int old_size = num_str.size();
-        //cout << old_size << endl;
-        int new_size = old_size + count;
-        num_str.resize( new_size );
-        //cout << new_size << endl;
-        for( int i=new_size-1, j=old_size-1, k=0, m=0; i>=0; --i, ++k ) {
-            //cout << k << endl;
-            //cout << en_style[m] << endl;
-            //if( k%4==3 ) {
-            if( k==in_style[m] ){
-                num_str[i] = ',';
-                //num_str[k] = ',';
-                ++m;
-            }
-            else {
-                num_str[i] = num_str[j];
-                //num_str[k] = num_str[j];
-                --j;
-            }
+    int old_size = result.size();
+    int count = style.computeCommaCount( old_size );
+    //cout<<count<<endl;
+    
+    int new_size = old_size + count;
+    result.resize( new_size );
+    int i(old_size-1), j(new_size-1), k(0);
+    while( i>=0 ) {
+        //cout<<k<<endl;
+        if( style.isComma(k) ) {
+            result[j] = ',';
         }
+        else {
+            result[j] = result[i];
+            --i;
+        }
+        ++k;
+        --j;
     }
-    //reverse( num_str.begin(), num_str.end() );
-    //cout << num_str << endl;
     
     if( flag_negative )
-        num_str = '-' + num_str;
+        result = '-'+result;
     
-    return num_str;
+    return result;
 }
- 
+
 int main() {
-    string res;
-    int _num;
-    cin >> _num;
-     
-    res = formatNum(_num);
-    cout << res;
-     
-    return 0;
+    
+    int number;
+    cin>>number;
+    
+    StyleBase<StyleEN> styleEN;
+    StyleBase<StyleIN> styleIN;
+    
+    cout<<formatNum( number, styleEN )<<endl;
+    cout<<formatNum( number, styleIN )<<endl;
+
 }
