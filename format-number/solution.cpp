@@ -35,7 +35,7 @@ struct StyleIN : StyleBase<StyleIN> {
 };
 
 template<typename T>
-string formatNum( int number, StyleBase<T>& style ) {
+string formatNum( int number, const StyleBase<T>& style ) {
     
     bool flag_negative(false);
     if( number<0 ) {
