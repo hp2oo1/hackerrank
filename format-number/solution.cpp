@@ -1,5 +1,5 @@
-// This is the text editor interface. 
-// Anything you type or change here will be seen by the other person in real time.
+// 1000000 -> 1,000,000 EN
+// 1000000 -> 10,00,000 IN
 
 #include <iostream>
 #include <sstream>
