@@ -11,6 +11,7 @@ struct Node {
     int data;
     Node *next;
     Node() : data(0), next(0) {};
+    Node(const Node& other) : data(other.data), next(other.next) {}
     Node(Node&& other) noexcept : data(move(other.data)), next(move(other.next)) {}
     ~Node() { cout<<"~Node()"<<endl; }
 };
